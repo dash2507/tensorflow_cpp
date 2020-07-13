@@ -1,5 +1,5 @@
 container:
-  image: l.gcr.io/google/bazel:3.1.0
+  image: python:3.7-buster
   cpu: 8
   memory: 24
 env:
@@ -14,9 +14,15 @@ intialize_task:
     - apt-get install -y autoconf clang cmake curl git libbsd-dev libblocksruntime-dev libcurl4-openssl-dev libedit-dev libicu-dev icu-devtools libpython-dev libncurses5-dev libsqlite3-dev libxml2-dev libxml2 ninja-build pkg-config systemtap-sdt-dev rsync sqlite3 swig tzdata unzip uuid-dev
 
   get_sources_script:
+    - wget https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel-3.1.0-installer-linux-x86_64.sh
+    - chmod +x bazel-*.sh
+  ` - ./bazel-3.1.0-installer-linux-x86_64.sh
     - git clone -q --depth 1 --single-branch https://github.com/tensorflow/tensorflow tensorflow
+    - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    - python get-pip.py
   
   configure_script:
+#     - export PATH= :$PATH
     - cd $DIR/tensorflow
     - chmod +x ./tensorflow/tools/ci_build/release/common.sh
     - source ./tensorflow/tools/ci_build/release/common.sh
