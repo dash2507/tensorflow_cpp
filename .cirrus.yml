@@ -5,6 +5,8 @@ container:
 env:
   DEBIAN_FRONTEND: noninteractive
   DIR: ${CIRRUS_WORKING_DIR}
+  CC: clang
+  
 
 intialize_task:
   timeout_in: 120m
