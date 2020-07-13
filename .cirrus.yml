@@ -13,7 +13,7 @@ intialize_task:
   
   dependecies_install_script:
     - apt-get update
-    - apt-get install -y autoconf clang cmake curl git libbsd-dev libblocksruntime-dev libcurl4-openssl-dev libedit-dev libicu-dev icu-devtools libpython-dev libncurses5-dev libsqlite3-dev libxml2-dev libxml2 ninja-build pkg-config systemtap-sdt-dev rsync sqlite3 swig tzdata unzip uuid-dev
+    - apt-get install -y autoconf clang cmake curl git
   
   check_versions_script:
     - clang --version
