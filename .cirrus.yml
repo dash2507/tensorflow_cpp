@@ -1,5 +1,5 @@
 container:
-  image: l.gcr.io/google/bazel:latest
+  image: l.gcr.io/google/bazel:3.1.0
   cpu: 8
   memory: 24
 env:
