@@ -18,8 +18,7 @@ intialize_task:
   
   configure_script:
     - cd $DIR/tensorflow
-    - yes ''
-    - ./configure
+    - yes '' | ./configure
   
   bazel_build_script:
     - cd $DIR/tensorflow
