@@ -16,7 +16,7 @@ intialize_task:
     - apt-get install -y autoconf clang cmake curl git libbsd-dev libblocksruntime-dev libcurl4-openssl-dev libedit-dev libicu-dev icu-devtools libpython-dev libncurses5-dev libsqlite3-dev libxml2-dev libxml2 ninja-build pkg-config systemtap-sdt-dev rsync sqlite3 swig tzdata unzip uuid-dev
   
   check_versions_script:
-    - gcc --version
+    - clang --version
    
   get_sources_script:
     - wget https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel-3.1.0-installer-linux-x86_64.sh
