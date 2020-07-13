@@ -1,0 +1,29 @@
+container:
+  image: l.gcr.io/google/bazel:latest
+  cpu: 8
+  memory: 24
+env:
+  DEBIAN_FRONTEND: noninteractive
+  DIR: ${CIRRUS_WORKING_DIR}
+
+intialize_task:
+  timeout_in: 120m
+  
+  dependecies_install_script:
+    - apt-get update
+    - apt-get install -y autoconf clang cmake curl git libbsd-dev libblocksruntime-dev libcurl4-openssl-dev libedit-dev libicu-dev icu-devtools libpython-dev libncurses5-dev libsqlite3-dev libxml2-dev libxml2 ninja-build pkg-config systemtap-sdt-dev rsync sqlite3 swig tzdata unzip uuid-dev
+
+  get_sources_script:
+    - git clone -q --depth 1 --single-branch https://github.com/tensorflow/tensorflow tensorflow
+  
+  configure_script:
+    - cd $DIR/tensorflow
+    - yes ''
+    - ./configure
+  
+  bazel_build_script:
+    - cd $DIR/tensorflow
+    - bazel build -c opt --copt=-mavx --copt=-mavx2 --copt=-mfma --copt=-mfpmath=both --copt=-msse4.1 --copt=-msse4.2 --config=monolithic --config=v2 --config=opt --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:install_headers
+
+  tensorflow_cc_artifacts:
+    path: $DIR/tensorflow/bazel-bin
