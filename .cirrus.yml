@@ -28,6 +28,7 @@ intialize_task:
   
   configure_script:
 #     - export PATH= :$PATH
+    - cd $DIR/tensorflow
     - pip install --upgrade astunparse numpy PyYAML gast h5py six grpcio portpicker scipy scikit-learn attrs wrapt
     - pip install keras_preprocessing==1.1.0 --no-deps
     - yes '' | ./configure || true
