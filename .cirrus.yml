@@ -32,11 +32,11 @@ intialize_task:
     - pip install keras_preprocessing==1.1.0 --no-deps
     - yes '' | ./configure || true
   
-  # BAZEL_LINKLIBS=-l%:libstdc++.a is added for building debug version - https://github.com/tensorflow/tensorflow/issues/35867
+  # added for building debug version - https://stackoverflow.com/a/53239413
   bazel_build_script:
     - cd $DIR/tensorflow
-    - BAZEL_LINKLIBS=-l%:libstdc++.a bazel build -c opt -c dbg --strip=never --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
-    - BAZEL_LINKLIBS=-l%:libstdc++.a bazel build -c opt -c dbg --strip=never --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:install_headers
+    - bazel build -c dbg --strip=never --copt="-DNDEBUG" --copt="-Og" --copt="-g3" --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
+    - bazel build -c dbg --strip=never --copt="-DNDEBUG" --copt="-Og" --copt="-g3" --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:install_headers
     - ls -l bazel-bin/
     - cd bazel-bin/tensorflow/ && zip -r $DIR/tensorflow_cpp.zip include/ libtensorflow_cc.so.* 
 
