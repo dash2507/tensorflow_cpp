@@ -40,4 +40,4 @@ intialize_task:
     - zip -r tensorflow_cpp.zip bazel-bin
 
   tensorflow_cc_artifacts:
-    path: $DIR/tensorflow/tensorflow_cpp.zip
+    path: tensorflow/tensorflow_cpp.zip
