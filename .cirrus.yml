@@ -36,7 +36,8 @@ intialize_task:
   # added for building debug version - https://stackoverflow.com/a/53239413
   bazel_build_script:
     - cd $DIR/tensorflow
-    - bazel build -c dbg --strip=never --copt="-DNDEBUG" --copt="-Og" --copt="-g3" --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
+#     - bazel build -c dbg --strip=never --copt="-DNDEBUG" --copt="-Og" --copt="-g3" --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
+    - bazel build -c dbg --strip=never --copt="-DNDEBUG" --copt="-Og" --copt="-g3" --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc
     - bazel build -c dbg --strip=never --copt="-DNDEBUG" --copt="-Og" --copt="-g3" --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:install_headers
     - ls -l bazel-bin/
     - cd bazel-bin/tensorflow/ && zip -r $DIR/tensorflow_cpp.zip include/ libtensorflow_cc.so.* 
