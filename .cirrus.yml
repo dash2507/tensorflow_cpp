@@ -37,7 +37,7 @@ intialize_task:
     - bazel build -c opt -c dbg --strip=never --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
     - bazel build -c opt -c dbg --strip=never --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:install_headers
     - ls -l bazel-bin/
-    - zip -r tensorflow_cpp.zip bazel-bin
+    - cd bazel-bin/tensorflow/ && zip -r $DIR/tensorflow_cpp.zip include/ libtensorflow_cc.so.* 
 
   tensorflow_cc_artifacts:
-    path: tensorflow/tensorflow_cpp.zip
+    path: tensorflow_cpp.zip
