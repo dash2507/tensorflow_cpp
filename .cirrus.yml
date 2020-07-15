@@ -49,7 +49,7 @@ intialize_task:
 #     - cp bazel-bin/tensorflow/libtensorflow_cc.so.* $DIR/libtensorflow_cc/
    
   libtensorflow_artifacts:
-    path: tensorflow/bazel-bin/tensorflow/*.so.*
+    path: tensorflow/bazel-bin/tensorflow/*.so.2.4.0
    
   tensorflow_inlcude_artifacts:
     path: tensorflow_include_cpp.zip
