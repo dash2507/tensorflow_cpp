@@ -36,12 +36,21 @@ intialize_task:
   # added for building debug version - https://stackoverflow.com/a/53239413
   # https://github.com/tensorflow/tensorflow/issues/27744
   # enable cache by appending --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
+  # if used --config=monolithic for generating libtensorflow_cc.so then tensorflow_framework
+  # is not required. only tensorflow_cc.so will work.
   bazel_build_script:
     - cd $DIR/tensorflow
-    - bazel build --cxxopt="-g" --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
-#     - bazel build -c dbg --strip=never --copt="-DNDEBUG" --copt="-Og" --copt="-g3" --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:install_headers
-    - ls -l bazel-bin/
-    - cd bazel-bin/tensorflow/ && zip -r $DIR/tensorflow_cpp.zip include/ libtensorflow_cc.so.* 
+    - bazel build --cxxopt="-g" --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
+    - bazel build --cxxopt="-g" --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_framework --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
+    - bazel build -c opt --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:install_headers
+#     - ls -l bazel-bin/
+#     - cd bazel-bin/tensorflow/ && zip -r $DIR/tensorflow_cpp.zip include/ libtensorflow_cc.so.* 
 
   tensorflow_cc_artifacts:
-    path: tensorflow_cpp.zip
+    path: tensorflow/bazel-bin/tensorflow/libtensorflow_cc.so.*
+  
+  tensorflow_framwork_artifacts:
+    path: tensorflow/bazel-bin/tensorflow/libtensorflow_framework.so.*
+   
+  tensorflow_inlcude_artifacts:
+    path: tensorflow/bazel-bin/tensorflow/include/*
