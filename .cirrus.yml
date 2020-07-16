@@ -6,6 +6,7 @@ env:
   DEBIAN_FRONTEND: noninteractive
   DIR: ${CIRRUS_WORKING_DIR}
   CC: clang
+  TF_ENABLE_XLA: 0
   
 
 intialize_task:
