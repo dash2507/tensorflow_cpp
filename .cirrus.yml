@@ -41,7 +41,7 @@ intialize_task:
   bazel_build_script:
     - cd $DIR/tensorflow
     - bazel build -c opt --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
-    - bazel build --cxxopt="-g" --cxxopt="-O1" --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_framework --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
+    - bazel build -c opt --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_framework --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
     - bazel build -c opt --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:install_headers
 #     - ls -l bazel-bin/
     - cd bazel-bin/tensorflow/ && zip -r $DIR/tensorflow_cpp.zip include/ libtensorflow_framework.so.2.4.0 libtensorflow_cc.so.2.4.0
