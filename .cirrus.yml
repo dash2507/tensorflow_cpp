@@ -40,8 +40,8 @@ intialize_task:
   # see - https://github.com/tensorflow/tensorflow/blob/ed60f21980a1b9ebd85d4913a731c8b05b843cea/.bazelrc#L31
   bazel_build_script:
     - cd $DIR/tensorflow
-    - bazel build -c opt --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
-    - bazel build -c opt --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:install_headers
+    - bazel build -c dbg --strip=never --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc
+    - bazel build -c dbg --strip=never --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:install_headers
     - cd bazel-bin/tensorflow/ && zip -r $DIR/tensorflow_cpp.zip include/ libtensorflow_cc.so.2.4.0
    
   tensorflow_cpp_artifacts:
