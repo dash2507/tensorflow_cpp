@@ -6,8 +6,8 @@ env:
   DEBIAN_FRONTEND: noninteractive
   DIR: ${CIRRUS_WORKING_DIR}
   TF_ENABLE_XLA: 0
-  VERSION: 2.3.0 
-#   change checkout branch version with this.
+  VERSION: 2.3.0
+  BRANCH_VERSION: r2.3
   
 
 intialize_task:
@@ -24,8 +24,7 @@ intialize_task:
     - wget https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel-3.1.0-installer-linux-x86_64.sh
     - chmod +x bazel-*.sh
     - ./bazel-3.1.0-installer-linux-x86_64.sh
-    - git clone -q --depth 1 --single-branch https://github.com/tensorflow/tensorflow tensorflow
-    - git checkout r2.3
+    - git clone -q --depth 1 -b $BRANCH_VERSION --single-branch https://github.com/tensorflow/tensorflow tensorflow
     - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
     - python get-pip.py
   
