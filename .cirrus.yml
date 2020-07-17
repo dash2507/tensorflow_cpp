@@ -5,8 +5,9 @@ container:
 env:
   DEBIAN_FRONTEND: noninteractive
   DIR: ${CIRRUS_WORKING_DIR}
-  CC: clang
   TF_ENABLE_XLA: 0
+  VERSION: 2.3.0 
+#   change checkout branch version with this.
   
 
 intialize_task:
@@ -14,16 +15,17 @@ intialize_task:
   
   dependecies_install_script:
     - apt-get update
-    - apt-get install -y autoconf clang cmake curl git zip
+    - apt-get install -y build-essential curl git zip
   
   check_versions_script:
-    - clang --version
+    - gcc --version
    
   get_sources_script:
     - wget https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel-3.1.0-installer-linux-x86_64.sh
     - chmod +x bazel-*.sh
     - ./bazel-3.1.0-installer-linux-x86_64.sh
     - git clone -q --depth 1 --single-branch https://github.com/tensorflow/tensorflow tensorflow
+    - git checkout r2.3
     - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
     - python get-pip.py
   
@@ -42,7 +44,7 @@ intialize_task:
   bazel_build_script:
     - cd $DIR/tensorflow
     - bazel build -c dbg --strip=never --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:install_headers --noincompatible_do_not_split_linking_cmdline
-    - cd bazel-bin/tensorflow/ && zip -r $DIR/tensorflow_cpp.zip include/ libtensorflow_cc.so.2.4.0
+    - cd bazel-bin/tensorflow/ && zip -r $DIR/tensorflow_cpp.zip include/ libtensorflow_cc.so.$VERSION
    
   tensorflow_cpp_artifacts:
     path: tensorflow_cpp.zip
