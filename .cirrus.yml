@@ -6,8 +6,8 @@ env:
   DEBIAN_FRONTEND: noninteractive
   DIR: ${CIRRUS_WORKING_DIR}
   TF_ENABLE_XLA: 0
-  VERSION: 2.0.0
-  BRANCH_VERSION: r2.0
+  VERSION: 2.1.0
+  BRANCH_VERSION: r2.1
   CONCURRENT_THREADS: 16
   
 
@@ -41,10 +41,10 @@ intialize_task:
   # if used --config=monolithic for generating libtensorflow_cc.so then tensorflow_framework is not required. only tensorflow_cc.so will work. 
   # see - https://github.com/tensorflow/tensorflow/blob/ed60f21980a1b9ebd85d4913a731c8b05b843cea/.bazelrc#L31
   # check this for build debug error https://github.com/tensorflow/tensorflow/issues/35623
-  # removed --config=nogcp ......... https://github.com/tensorflow/tensorflow/issues/34878 see for v2.0.0
+  # remove --config=nogcp for v2.0.0 ......... https://github.com/tensorflow/tensorflow/issues/34878
   bazel_build_script:
     - cd $DIR/tensorflow
-    - bazel build -j $CONCURRENT_THREADS -c dbg --strip=never --config=monolithic --config=v2 --config=noaws --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:install_headers --noincompatible_do_not_split_linking_cmdline
+    - bazel build -j $CONCURRENT_THREADS -c dbg --strip=never --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:install_headers --noincompatible_do_not_split_linking_cmdline
     - cd bazel-bin/tensorflow/ && zip -r $DIR/tensorflow_cpp.zip include/ libtensorflow_cc.so.$VERSION
    
   tensorflow_cpp_artifacts:
