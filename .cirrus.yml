@@ -22,9 +22,9 @@ intialize_task:
     - gcc --version
    
   get_sources_script:
-    - wget https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel-3.1.0-installer-linux-x86_64.sh
+    - wget https://github.com/bazelbuild/bazel/releases/download/0.29.1/bazel-0.29.1-installer-linux-x86_64.sh
     - chmod +x bazel-*.sh
-    - ./bazel-3.1.0-installer-linux-x86_64.sh
+    - ./bazel-0.29.1-installer-linux-x86_64.sh
     - git clone -q --depth 1 -b $BRANCH_VERSION --single-branch https://github.com/tensorflow/tensorflow tensorflow
     - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
     - python get-pip.py
