@@ -9,7 +9,7 @@ trigger:
 jobs:
   - job: tensorflow_cpp
     pool:
-      vmImage: "ubuntu-18.04"
+      vmImage: "ubuntu-20.04"
     timeoutInMinutes: 0
     variables:
       DEBIAN_FRONTEND: noninteractive
@@ -59,7 +59,7 @@ jobs:
         mkdir -p $DIR/artifacts
         mkdir -p $BAZEL_CACHE
         cd $DIR/tensorflow
-        bazel build -j $CONCURRENT_THREADS -c dbg --strip=never --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:tensorflow_framework //tensorflow:install_headers --noincompatible_do_not_split_linking_cmdline --disk_cache=$BAZEL_CACHE
+        bazel build -j $CONCURRENT_THREADS -c dbg --strip=never --config=short_logs  --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:tensorflow_framework //tensorflow:install_headers --noincompatible_do_not_split_linking_cmdline --disk_cache=$BAZEL_CACHE
         cd bazel-bin/tensorflow/ && zip -r $DIR/artifacts/tensorflow_cpp.zip include/ 
         cp libtensorflow_cc.so.$VERSION $DIR/artifacts 
         cp libtensorflow_framework.so.$VERSION $DIR/artifacts
