@@ -49,17 +49,17 @@ jobs:
         yes '' | ./configure || true
       displayName: 'Install Python Libraries and Configure'
     
-    - task: Cache@2
-      inputs:
-        key: 'bazel | "$(Agent.OS)"'
-        path: $(BAZEL_CACHE)
-      displayName: bazel_cache
+    # - task: Cache@2
+    #   inputs:
+    #     key: 'bazel | "$(Agent.OS)"'
+    #     path: $(BAZEL_CACHE)
+    #   displayName: bazel_cache
     
     - bash: |
         mkdir -p $DIR/artifacts
         mkdir -p $BAZEL_CACHE
         cd $DIR/tensorflow
-        bazel build -j $CONCURRENT_THREADS -c dbg --strip=never --config=short_logs  --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:tensorflow_framework //tensorflow:install_headers --noincompatible_do_not_split_linking_cmdline --disk_cache=$BAZEL_CACHE
+        bazel build -j $CONCURRENT_THREADS -c dbg --strip=never --config=short_logs  --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:tensorflow_framework //tensorflow:install_headers --noincompatible_do_not_split_linking_cmdline
         cd bazel-bin/tensorflow/ && zip -r $DIR/artifacts/tensorflow_cpp.zip include/ 
         cp libtensorflow_cc.so.$VERSION $DIR/artifacts 
         cp libtensorflow_framework.so.$VERSION $DIR/artifacts
