@@ -23,7 +23,7 @@ jobs:
     steps:
     - bash: |
         sudo apt-get update
-        sudo install -y build-essential curl git zip
+        sudo apt install -y build-essential curl git zip
       displayName: update and install packages
     
     - task: UsePythonVersion@0
