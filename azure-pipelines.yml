@@ -50,14 +50,7 @@ jobs:
         cd bazel-bin/tensorflow/ && zip -r $DIR/artifacts/tensorflow_cpp.zip include/ 
         cp libtensorflow_cc.so.$VERSION $DIR/artifacts 
         cp libtensorflow_framework.so.$VERSION $DIR/artifacts
-    displayName: 'Build Tensorflow C++'
+      displayName: 'Build Tensorflow C++'
 
-    # - task: PublishPipelineArtifact@1
-    #   inputs:
-    #     targetPath: "$(DIR)/artifacts"
-    #     artifact: "tensorflow_cpp.tar.gz"
-    
     - publish: $(DIR)/artifacts
-      artifact: WebApp
-
-
+      artifact: tensorflow_cpp.tar.gz
