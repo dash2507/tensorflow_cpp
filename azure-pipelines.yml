@@ -18,7 +18,6 @@ jobs:
       VERSION: 2.1.1
       BRANCH_VERSION: r2.1
       CONCURRENT_THREADS: 4
-      PATH: '$(PATH):~/bin'
       BZVERSION: 0.29.1
     
     steps:
@@ -32,6 +31,7 @@ jobs:
         versionSpec: '3.6'
 
     - bash: |
+        echo "##vso[task.setvariable variable=PATH]${PATH}:~/bin"
         wget https://github.com/bazelbuild/bazel/releases/download/$BZVERSION/bazel-$BZVERSION-installer-linux-x86_64.sh
         chmod +x bazel-*.sh
         ./bazel-$BZVERSION-installer-linux-x86_64.sh --user
