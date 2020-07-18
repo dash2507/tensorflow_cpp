@@ -44,7 +44,7 @@ intialize_task:
   # remove --config=nogcp for v2.0.0 ......... https://github.com/tensorflow/tensorflow/issues/34878
   bazel_build_script:
     - cd $DIR/tensorflow
-    - bazel build -j $CONCURRENT_THREADS --cxxopt="-Og" -c dbg --strip=never --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:tensorflow_framework //tensorflow:install_headers --noincompatible_do_not_split_linking_cmdline --spawn_strategy=sandboxed --genrule_strategy=sandboxed --strategy=Javac=sandboxed --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
+    - bazel build -j $CONCURRENT_THREADS --cxxopt="-Og" -c dbg --strip=never --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:tensorflow_framework //tensorflow:install_headers --noincompatible_do_not_split_linking_cmdline --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
     - cd bazel-bin/tensorflow/ && zip -r $DIR/tensorflow_cpp.zip include/ 
     - cp libtensorflow_cc.so.$VERSION $DIR/ 
     - cp libtensorflow_framework.so.$VERSION $DIR/
