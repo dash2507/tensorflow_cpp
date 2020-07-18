@@ -19,6 +19,7 @@ jobs:
       BRANCH_VERSION: r2.1
       CONCURRENT_THREADS: 4
       BZVERSION: 0.29.1
+      BAZEL_CACHE: $DIR/bazel_cache
     
     steps:
     - bash: |
@@ -46,11 +47,18 @@ jobs:
         pip install keras_preprocessing==1.1.0 --no-deps
         yes '' | ./configure || true
       displayName: 'Install Python Libraries and Configure'
-
+    
+    - task: Cache@2
+      inputs:
+        key: 'bazel | "$(Agent.OS)"'
+        path: $(BAZEL_CACHE)
+      displayName: bazel_cache
+    
     - bash: |
         mkdir -p $DIR/artifacts
+        mkdir -p $BAZEL_CACHE
         cd $DIR/tensorflow
-        bazel build -j $CONCURRENT_THREADS --cxxopt="-Og" -c dbg --strip=never --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:tensorflow_framework //tensorflow:install_headers --noincompatible_do_not_split_linking_cmdline --spawn_strategy=sandboxed --genrule_strategy=sandboxed --strategy=Javac=sandboxed --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
+        bazel build -j $CONCURRENT_THREADS -c dbg --strip=never --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:tensorflow_framework //tensorflow:install_headers --noincompatible_do_not_split_linking_cmdline --disk_cache=$BAZEL_CACHE
         cd bazel-bin/tensorflow/ && zip -r $DIR/artifacts/tensorflow_cpp.zip include/ 
         cp libtensorflow_cc.so.$VERSION $DIR/artifacts 
         cp libtensorflow_framework.so.$VERSION $DIR/artifacts
