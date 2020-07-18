@@ -44,8 +44,16 @@ intialize_task:
   # remove --config=nogcp for v2.0.0 ......... https://github.com/tensorflow/tensorflow/issues/34878
   bazel_build_script:
     - cd $DIR/tensorflow
-    - bazel build -j $CONCURRENT_THREADS -c dbg --strip=never --config=monolithic --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:install_headers --noincompatible_do_not_split_linking_cmdline
-    - cd bazel-bin/tensorflow/ && zip -r $DIR/tensorflow_cpp.zip include/ libtensorflow_cc.so.$VERSION
-   
+    - bazel build -j $CONCURRENT_THREADS -c dbg --strip=never --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:tensorflow_framework //tensorflow:install_headers --noincompatible_do_not_split_linking_cmdline
+    - cd bazel-bin/tensorflow/ && zip -r $DIR/tensorflow_cpp.zip include/ 
+    - cp libtensorflow_cc.so.$VERSION $DIR/ 
+    - cp libtensorflow_framework.so.$VERSION $DIR/
+  
+  tensorflow_cc_artifacts:
+    path: libtensorflow_cc.so.$VERSION
+  
+  tensorflow_framework_artifacts:
+    path: libtensorflow_framework.so.$VERSION
+
   tensorflow_cpp_artifacts:
     path: tensorflow_cpp.zip
