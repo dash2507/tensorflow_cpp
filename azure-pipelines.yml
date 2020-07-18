@@ -1,0 +1,63 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+jobs:
+  - job: tensorflow_cpp
+    pool:
+      vmImage: 'python:3.7-buster'
+    timeoutInMinutes: 0
+    variables:
+      DEBIAN_FRONTEND: noninteractive
+      DIR: $(Build.SourcesDirectory)
+      TF_ENABLE_XLA: 0
+      VERSION: 2.1.1
+      BRANCH_VERSION: r2.1
+      CONCURRENT_THREADS: 4
+      PATH: '$(PATH):~/bin'
+      BZVERSION: 0.29.1
+    
+    steps:
+    - bash: |
+        sudo apt-get update
+        sudo install -y build-essential curl git zip
+      displayName: update and install packages
+    
+    - bash: |
+        wget https://github.com/bazelbuild/bazel/releases/download/$BZVERSION/bazel-$BZVERSION-installer-linux-x86_64.sh
+        chmod +x bazel-*.sh
+        ./bazel-$BZVERSION-installer-linux-x86_64.sh --user
+        git clone -q --depth 1 -b $BRANCH_VERSION --single-branch https://github.com/tensorflow/tensorflow tensorflow
+        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        python get-pip.py
+      displayName: 'Install bazel and pip'
+
+    - bash: |
+        cd $DIR/tensorflow
+        pip install --upgrade astunparse numpy PyYAML gast h5py six grpcio portpicker scipy scikit-learn attrs wrapt
+        pip install keras_preprocessing==1.1.0 --no-deps
+        yes '' | ./configure || true
+      displayName: 'Install Python Libraries and Configure'
+
+    - bash: |
+        mkdir -p $DIR/artifacts
+        cd $DIR/tensorflow
+        bazel build -j $CONCURRENT_THREADS --cxxopt="-Og" -c dbg --strip=never --config=v2 --config=noaws --config=nogcp --config=nohdfs --config=nonccl --verbose_failures  //tensorflow:tensorflow_cc //tensorflow:tensorflow_framework //tensorflow:install_headers --noincompatible_do_not_split_linking_cmdline --spawn_strategy=sandboxed --genrule_strategy=sandboxed --strategy=Javac=sandboxed --remote_http_cache=http://$CIRRUS_HTTP_CACHE_HOST
+        cd bazel-bin/tensorflow/ && zip -r $DIR/artifacts/tensorflow_cpp.zip include/ 
+        cp libtensorflow_cc.so.$VERSION $DIR/artifacts 
+        cp libtensorflow_framework.so.$VERSION $DIR/artifacts
+    displayName: 'Build Tensorflow C++'
+
+    # - task: PublishPipelineArtifact@1
+    #   inputs:
+    #     targetPath: "$(DIR)/artifacts"
+    #     artifact: "tensorflow_cpp.tar.gz"
+    
+    - publish: $(DIR)/artifacts
+      artifact: WebApp
+
+
