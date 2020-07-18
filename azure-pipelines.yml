@@ -15,10 +15,13 @@ jobs:
       DEBIAN_FRONTEND: noninteractive
       DIR: $(Build.SourcesDirectory)
       TF_ENABLE_XLA: 0
-      VERSION: 2.1.1
-      BRANCH_VERSION: r2.1
+# Look for Version
+# https://github.com/tensorflow/tensorflow/blob/555c5d61553c47121acaa5939db27af0b7ec10e9/tensorflow/tensorflow.bzl#L62
+      VERSION: 2.2.0
+      BRANCH_NAME: r2.2
       CONCURRENT_THREADS: 4
-      BZVERSION: 0.29.1
+# Bazel Version: https://github.com/tensorflow/tensorflow/blob/r2.2/.bazelversion
+      BZVERSION: 2.0.0
       BAZEL_CACHE: $DIR/bazel_cache
     
     steps:
@@ -37,7 +40,7 @@ jobs:
         wget https://github.com/bazelbuild/bazel/releases/download/$BZVERSION/bazel-$BZVERSION-installer-linux-x86_64.sh
         chmod +x bazel-*.sh
         ./bazel-$BZVERSION-installer-linux-x86_64.sh --user
-        git clone -q --depth 1 -b $BRANCH_VERSION --single-branch https://github.com/tensorflow/tensorflow tensorflow
+        git clone -q --depth 1 -b $BRANCH_NAME --single-branch https://github.com/tensorflow/tensorflow tensorflow
         curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
         python get-pip.py
       displayName: 'Install bazel and pip'
