@@ -9,7 +9,7 @@ trigger:
 jobs:
   - job: tensorflow_cpp
     pool:
-      vmImage: "ubuntu-latest"
+      vmImage: "ubuntu-18.04"
     timeoutInMinutes: 0
     variables:
       DEBIAN_FRONTEND: noninteractive
@@ -25,6 +25,7 @@ jobs:
     - bash: |
         sudo apt-get update
         sudo apt install -y build-essential curl git zip
+        gcc --version
       displayName: update and install packages
     
     - task: UsePythonVersion@0
